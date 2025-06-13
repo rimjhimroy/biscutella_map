@@ -3,10 +3,19 @@ import pandas as pd
 import pydeck as pdk
 
 st.set_page_config(layout="wide")
-st.title("🧬 Biscutella Sample Map (Switzerland)")
+st.title("🧬 Biscutella Population Map (Switzerland)")
 
-# Load CSV data
-data = pd.read_csv("biscutella_pops.csv")
+# Load sample-level data
+raw_data = pd.read_csv("biscutella_pops.csv")
+
+# Aggregate by population
+grouped = raw_data.groupby("population").agg({
+    "lat": "mean",
+    "lon": "mean",
+    "WGS": "max",
+    "RADseq": "max",
+    "Assembly": "max"
+}).reset_index()
 
 # Compute color based on sequencing data
 def get_color(row):
@@ -17,35 +26,17 @@ def get_color(row):
     elif row["RADseq"] == 1:
         return [0, 255, 0, 160]  # Green = RADseq only
     else:
-        return [120, 120, 120, 100]  # Gray = no sequencing info
+        return [120, 120, 120, 100]  # Gray = no data
 
 def get_line_color(row):
     return [0, 0, 0, 255] if row["Assembly"] == 1 else [0, 0, 0, 0]
 
-data["color"] = data.apply(get_color, axis=1)
-data["line_color"] = data.apply(get_line_color, axis=1)
+grouped["color"] = grouped.apply(get_color, axis=1)
+grouped["line_color"] = grouped.apply(get_line_color, axis=1)
 
-# Show data table
-st.write("### 📋 Sample Metadata")
-st.dataframe(data)
-
-# Tooltip
-tooltip = {
-    "html": """
-    <b>{sample_id}</b><br/>
-    Population: {population}<br/>
-    WGS: {WGS}<br/>
-    RADseq: {RADseq}<br/>
-    Genome Assembly: {Assembly}
-    """,
-    "style": {
-        "backgroundColor": "black",
-        "color": "white"
-    }
-}
 
 # Map
-st.write("### 🗺️ Sample Map")
+st.write("### 🗺️ Population Map")
 st.pydeck_chart(pdk.Deck(
     map_style="mapbox://styles/mapbox/light-v9",
     initial_view_state=pdk.ViewState(
@@ -57,14 +48,32 @@ st.pydeck_chart(pdk.Deck(
     layers=[
         pdk.Layer(
             "ScatterplotLayer",
-            data=data,
+            data=grouped,
             get_position='[lon, lat]',
             get_fill_color="color",
             get_line_color="line_color",
-            get_radius=3000,
+            get_radius=4000,
             line_width_min_pixels=2,
             pickable=True,
         )
     ],
     tooltip=tooltip
 ))
+
+# Show population-level table
+st.write("### 📋 Population Summary")
+st.dataframe(grouped)
+
+# Tooltip
+tooltip = {
+    "html": """
+    <b>{population}</b><br/>
+    WGS: {WGS}<br/>
+    RADseq: {RADseq}<br/>
+    Assembly: {Assembly}
+    """,
+    "style": {
+        "backgroundColor": "black",
+        "color": "white"
+    }
+}

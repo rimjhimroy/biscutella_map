@@ -3,7 +3,7 @@ import pandas as pd
 import pydeck as pdk
 
 st.set_page_config(layout="wide")
-st.title("🧬 Biscutella Population Map (Switzerland)")
+st.title("Biscutella Population Map (Switzerland) - test data")
 
 # Load sample-level data
 raw_data = pd.read_csv("biscutella_pops.csv")

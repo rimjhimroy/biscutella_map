@@ -6,7 +6,7 @@ st.set_page_config(layout="wide")
 st.title("🧬 Biscutella Sample Map (Switzerland)")
 
 # Load CSV data
-data = pd.read_csv("biscutella_samples.csv")
+data = pd.read_csv("biscutella_pops.csv")
 
 # Compute color based on sequencing data
 def get_color(row):

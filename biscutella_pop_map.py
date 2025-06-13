@@ -1,4 +1,4 @@
-mport streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
@@ -36,4 +36,4 @@ st.pydeck_chart(pdk.Deck(
             get_radius=200,
         ),
     ],
-))"
+))

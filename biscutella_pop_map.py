@@ -77,7 +77,7 @@ st.pydeck_chart(pdk.Deck(
 ))
 
 # Show population-level table
-st.write("### 📋 Population Summary")
+st.write("### Population Genetics Data")
 st.dataframe(grouped_data)
 
 # Selection dropdown
@@ -88,5 +88,5 @@ selected_pops = st.multiselect("🔍 Select population(s) to view:", pop_options
 filtered = raw_data[raw_data["population"].isin(selected_pops)]
 
 # Show table
-st.write("### 📋 Filtered Population Summary")
+st.write("### Filtered Population Data Summary")
 st.dataframe(filtered)

@@ -80,4 +80,38 @@ st.pydeck_chart(pdk.Deck(
 st.write("### 📋 Population Summary")
 st.dataframe(grouped_data)
 
-# Add a legen
+# Selection dropdown
+pop_options = grouped["population"].unique().tolist()
+selected_pops = st.multiselect("🔍 Select population(s) to view:", pop_options, default=pop_options)
+
+# Filter by selection
+filtered = grouped[grouped["population"].isin(selected_pops)]
+
+# Show table
+st.write("### 📋 Filtered Population Summary")
+st.dataframe(filtered)
+
+# Map
+st.write("### 🗺️ Filtered Map")
+st.pydeck_chart(pdk.Deck(
+    map_style="mapbox://styles/mapbox/light-v9",
+    initial_view_state=pdk.ViewState(
+        latitude=filtered["lat"].mean(),
+        longitude=filtered["lon"].mean(),
+        zoom=7,
+        pitch=40,
+    ),
+    layers=[
+        pdk.Layer(
+            "ScatterplotLayer",
+            data=filtered,
+            get_position='[lon, lat]',
+            get_fill_color="color",
+            get_line_color="line_color",
+            get_radius=4000,
+            line_width_min_pixels=2,
+            pickable=True,
+        )
+    ],
+    tooltip=tooltip
+))

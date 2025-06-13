@@ -31,7 +31,7 @@ def get_color(row):
 def get_line_color(row):
     return [0, 0, 0, 255] if row["Assembly"] == 1 else [0, 0, 0, 0]
 
-grouped_data = grouped
+grouped_data = grouped.copy()
 grouped["color"] = grouped.apply(get_color, axis=1)
 grouped["line_color"] = grouped.apply(get_line_color, axis=1)
 

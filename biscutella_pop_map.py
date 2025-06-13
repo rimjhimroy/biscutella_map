@@ -35,6 +35,21 @@ grouped["color"] = grouped.apply(get_color, axis=1)
 grouped["line_color"] = grouped.apply(get_line_color, axis=1)
 
 
+# Tooltip
+tooltip = {
+    "html": """
+    <b>{population}</b><br/>
+    WGS: {WGS}<br/>
+    RADseq: {RADseq}<br/>
+    Assembly: {Assembly}
+    """,
+    "style": {
+        "backgroundColor": "black",
+        "color": "white"
+    }
+}
+
+
 # Map
 st.write("### 🗺️ Population Map")
 st.pydeck_chart(pdk.Deck(
@@ -63,19 +78,5 @@ st.pydeck_chart(pdk.Deck(
 # Show population-level table
 st.write("### 📋 Population Summary")
 st.dataframe(grouped)
-
-# Tooltip
-tooltip = {
-    "html": """
-    <b>{population}</b><br/>
-    WGS: {WGS}<br/>
-    RADseq: {RADseq}<br/>
-    Assembly: {Assembly}
-    """,
-    "style": {
-        "backgroundColor": "black",
-        "color": "white"
-    }
-}
 
 # Add a legend

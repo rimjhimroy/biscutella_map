@@ -12,8 +12,8 @@ raw_data = pd.read_csv("biscutella_pops.csv")
 grouped = raw_data.groupby("population").agg({
     "lat": "mean",
     "lon": "mean",
-    "WGS": "max",
-    "RADseq": "max",
+    "WGS": "sum",
+    "RADseq": "sum",
     "Assembly": "max"
 }).reset_index()
 
@@ -31,6 +31,7 @@ def get_color(row):
 def get_line_color(row):
     return [0, 0, 0, 255] if row["Assembly"] == 1 else [0, 0, 0, 0]
 
+grouped_data = grouped
 grouped["color"] = grouped.apply(get_color, axis=1)
 grouped["line_color"] = grouped.apply(get_line_color, axis=1)
 
@@ -77,6 +78,6 @@ st.pydeck_chart(pdk.Deck(
 
 # Show population-level table
 st.write("### 📋 Population Summary")
-st.dataframe(grouped)
+st.dataframe(grouped_data)
 
 # Add a legen

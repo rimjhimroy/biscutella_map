@@ -77,3 +77,5 @@ tooltip = {
         "color": "white"
     }
 }
+
+# Add a legend
